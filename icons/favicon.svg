@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="110" fill="#0a0d14"/>
+
+  <!-- Grid yatay -->
+  <line x1="68"  y1="189" x2="444" y2="189" stroke="#2a3a55" stroke-width="3.5"/>
+  <line x1="68"  y1="256" x2="444" y2="256" stroke="#2a3a55" stroke-width="3.5"/>
+  <line x1="68"  y1="323" x2="444" y2="323" stroke="#2a3a55" stroke-width="3.5"/>
+  <!-- Grid dikey -->
+  <line x1="189" y1="68"  x2="189" y2="444" stroke="#2a3a55" stroke-width="3.5"/>
+  <line x1="256" y1="68"  x2="256" y2="444" stroke="#2a3a55" stroke-width="3.5"/>
+  <line x1="323" y1="68"  x2="323" y2="444" stroke="#2a3a55" stroke-width="3.5"/>
+
+  <!-- Ana vektör çizgisi -->
+  <polyline points="98,370 189,256 256,302 323,189 414,144"
+    fill="none" stroke="#60a5fa" stroke-width="18"
+    stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Vertex noktaları -->
+  <circle cx="98"  cy="370" r="16" fill="#0a0d14" stroke="#60a5fa" stroke-width="8"/>
+  <circle cx="189" cy="256" r="16" fill="#0a0d14" stroke="#60a5fa" stroke-width="8"/>
+  <circle cx="256" cy="302" r="16" fill="#0a0d14" stroke="#60a5fa" stroke-width="8"/>
+  <circle cx="323" cy="189" r="16" fill="#0a0d14" stroke="#60a5fa" stroke-width="8"/>
+  <circle cx="414" cy="144" r="16" fill="#0a0d14" stroke="#60a5fa" stroke-width="8"/>
+
+  <!-- Aktif nokta — yeşil -->
+  <circle cx="256" cy="302" r="26" fill="#4ade80"/>
+  <circle cx="256" cy="302" r="11" fill="#0a0d14"/>
+</svg>
