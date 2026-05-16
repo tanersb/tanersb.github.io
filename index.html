@@ -867,7 +867,7 @@ window.NCZViewer = (function(){
     $$('.mtab').forEach(b => b.classList.toggle('active', b.dataset.t === t));
   }
 
-  setTile('dark');
+  setTile('sat');
   $$('.mtab').forEach(b => b.addEventListener('click', () => setTile(b.dataset.t)));
   window.addEventListener('resize',()=>setTimeout(()=>map.invalidateSize(),100));
 
