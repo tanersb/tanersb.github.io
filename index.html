@@ -2,6 +2,27 @@
 <html lang="tr" data-theme="dark">
 
 <head>
+<script>
+(function(){
+  setInterval(function(){(function(){debugger;}.call(this));},50);
+  (function(){const n=function(){};['assert','clear','count','debug','dir','error',
+  'group','groupEnd','info','log','profile','profileEnd','table','time','timeEnd',
+  'trace','warn'].forEach(function(m){try{console[m]=n;}catch(_){}});})();
+  document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+  document.addEventListener('keydown',function(e){
+    if(e.keyCode===123){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.shiftKey&&e.keyCode===73){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.shiftKey&&e.keyCode===74){e.preventDefault();return false;}
+    if(e.ctrlKey&&e.keyCode===85){e.preventDefault();return false;}
+  });
+  var _t=200;
+  setInterval(function(){
+    if(window.outerWidth-window.innerWidth>_t||window.outerHeight-window.innerHeight>_t){
+      document.body.innerHTML='<div style="display:flex;height:100vh;align-items:center;justify-content:center;font-family:sans-serif;font-size:18px;color:#666;">⚠ Geliştirici araçları kapatıldığında sayfa yenilenir.</div>';
+    }
+  },300);
+})();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport"
     content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
@@ -1930,8 +1951,7 @@
 </head>
 
 <body>
-  <!-- Modül Yüklenme Ekranı -->
-  <div id="module-loader-overlay">
+    <div id="module-loader-overlay">
     <div class="loader-content">
       <div class="loader-spinner"></div>
       <div id="loader-status">Sistem başlatılıyor...</div>
@@ -1939,8 +1959,7 @@
     </div>
   </div>
 
-  <!-- Dosya Yükleme Progress Ekranı -->
-  <div id="file-loader-overlay">
+    <div id="file-loader-overlay">
     <div class="modal">
       <div class="modal-hd">
         <svg viewBox="0 0 24 24">
@@ -2016,8 +2035,7 @@
     </div>
   </div>
 
-  <!-- TOPBAR -->
-  <header class="topbar">
+    <header class="topbar">
     <button class="menu-btn" id="menuBtn">
       <svg viewBox="0 0 24 24">
         <path d="M4 6h16M4 12h16M4 18h16" />
@@ -2038,8 +2056,7 @@
           class="tst-lbl">Projeksiyon</span></div>
     </div>
     <div class="topacts">
-      <!-- Modüller buraya buton ekler -->
-      <div id="topbar-modules"></div>
+            <div id="topbar-modules"></div>
       <button class="ibtn" id="themeBtn" title="Tema">
         <svg viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5" />
@@ -2050,8 +2067,7 @@
     </div>
   </header>
 
-  <!-- MOBILE INFO BAR -->
-  <div class="infobar" id="infobar" style="display:none">
+    <div class="infobar" id="infobar" style="display:none">
     <span class="ibc" id="ib-g" style="color:var(--acc)">—</span><span class="ibd">·</span>
     <span class="ibc" id="ib-l" style="color:var(--acc2)">—</span><span class="ibd">·</span>
     <span class="ibc" id="ib-s" style="color:var(--warn)">—</span><span class="ibd">·</span>
@@ -2060,8 +2076,7 @@
 
   <div class="main">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+        <aside class="sidebar">
       <div class="sec">
         <div class="sec-t">Dosya</div>
         <div class="dz" id="dz-d">
@@ -2113,8 +2128,7 @@
           Değiştir ve Yenile
         </button>
       </div>
-      <!-- Modüller sidebar'a ek section ekler -->
-      <div id="sidebar-modules"></div>
+            <div id="sidebar-modules"></div>
       <div id="lsec-d" style="display:none">
         <div class="lc-strip">
           <button class="lcbtn" id="show-d">👁 Göster</button>
@@ -2180,8 +2194,7 @@
       </div>
     </aside>
 
-    <!-- MAP -->
-    <div class="map-area">
+        <div class="map-area">
       <div class="loadbar" id="loadbar"></div>
       <div id="map"></div>
       <div class="map-tabs">
@@ -2191,10 +2204,8 @@
         <button class="mtab" data-t="sat">Uydu</button>
         <button class="mtab" data-t="topo">Topo</button>
       </div>
-      <!-- Modüller haritaya panel ekler -->
-      <div id="map-modules"></div>
-      <!-- MOBİL KONTROL PANELİ -->
-      <div class="mob-ctrl" id="mob-ctrl">
+            <div id="map-modules"></div>
+            <div class="mob-ctrl" id="mob-ctrl">
         <button class="mob-ctrl-btn" id="mob-theme" title="Tema">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="5" />
@@ -2238,17 +2249,13 @@
 
   </div>
 
-  <!-- VEIL -->
-  <div class="veil" id="veil"></div>
+    <div class="veil" id="veil"></div>
 
-  <!-- BOTTOM SHEET -->
-  <div class="bsheet" id="bsheet">
-    <!-- Handle -->
-    <div class="bs-handle" id="bs-handle">
+    <div class="bsheet" id="bsheet">
+        <div class="bs-handle" id="bs-handle">
       <div class="bs-handle-bar"></div>
     </div>
-    <!-- Header: stats + tabs -->
-    <div class="bs-hd">
+        <div class="bs-hd">
       <div class="bs-stats" id="bs-stats">
         <div class="bss"><b id="bss-g" style="color:var(--acc)">—</b><small>Geometri</small></div>
         <div class="bss"><b id="bss-l" style="color:var(--acc2)">—</b><small>Katman</small></div>
@@ -2260,11 +2267,9 @@
         <button class="bs-tab" data-bs="aktar">📤 Aktar</button>
       </div>
     </div>
-    <!-- Body -->
-    <div class="bs-body">
+        <div class="bs-body">
 
-      <!-- PANEL: Dosya -->
-      <div class="bs-panel active" data-bs-panel="dosya">
+            <div class="bs-panel active" data-bs-panel="dosya">
         <div class="sec">
           <div class="dz" id="dz-m">
             <input type="file" id="fi-m" accept="*/*">
@@ -2317,8 +2322,7 @@
         </div>
       </div>
 
-      <!-- PANEL: Katmanlar -->
-      <div class="bs-panel" data-bs-panel="katmanlar">
+            <div class="bs-panel" data-bs-panel="katmanlar">
         <div id="lsec-m" style="display:none">
           <div class="lc-strip">
             <button class="lcbtn" id="show-m">👁 Göster</button>
@@ -2334,8 +2338,7 @@
         </div>
       </div>
 
-      <!-- PANEL: Aktar -->
-      <div class="bs-panel" data-bs-panel="aktar">
+            <div class="bs-panel" data-bs-panel="aktar">
         <div class="expbar" id="es-m">
           <div class="exp-group">
             <div class="exp-group-lbl">Vektör</div>
@@ -2387,11 +2390,8 @@
         </div>
       </div>
 
-    </div><!-- /bs-body -->
-  </div><!-- /bsheet -->
-
-  <!-- FAB -->
-  <button class="fab" id="fab" title="Paneli Aç/Kapat">
+    </div>  </div>
+    <button class="fab" id="fab" title="Paneli Aç/Kapat">
     <svg viewBox="0 0 24 24">
       <path d="M4 6h16M4 12h16M4 18h7" />
     </svg>
@@ -2399,8 +2399,7 @@
 
 
 
-  <!-- CONTEXT MENU -->
-  <div class="ctx" id="ctx">
+    <div class="ctx" id="ctx">
     <div class="ctx-hd">📍 Konum Bilgisi</div>
     <div class="ctx-coords">
       <span>Lat (Kuzey): <b id="ctx-lat">—</b></span>
@@ -2409,8 +2408,7 @@
           id="ctx-north">—</b></span>
       <span>X UTM (Doğu): <b id="ctx-east">—</b></span>
     </div>
-    <!-- Modüller buraya item ekler -->
-    <div id="ctx-modules"></div>
+        <div id="ctx-modules"></div>
     <div class="ctx-row" id="ctx-cll">
       <svg viewBox="0 0 24 24">
         <path
@@ -2435,11 +2433,9 @@
     </div>
   </div>
 
-  <!-- SNAP / ORTHO BADGE BAR — harita sol alt -->
-  <div class="cbar-left" id="cbar-left"></div>
+    <div class="cbar-left" id="cbar-left"></div>
 
-  <!-- COORDS BAR -->
-  <div class="cbar" id="cbar">
+    <div class="cbar" id="cbar">
     <div class="cbar-attr">
       <a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>
     </div>
@@ -2447,8 +2443,7 @@
     <span class="cbar-utm" id="cbar-utm"></span>
   </div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+    <div class="toast" id="toast"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/proj4@2.9.0/dist/proj4.js"></script>
@@ -3447,58 +3442,17 @@
     });
   </script>
 
-  <!-- ═══ MODÜLLER ═══
-  Sıra önemli:
-    1. lib (bağımlılıklar)
-    2. parser
-    3. render
-    4. loader (format-spesifik yükleyiciler)
-    5. ui
-    6. draw
-    7. spatial (Turf.js gerektiren modüller)
-    8. export
-═══════════════════════════════════════════════ -->
+  
+          
+    
+        
+    
+              
+        
+          
+      <!-- <script src="plugins/parcel-query.js"></script> -->
 
-  <!-- ── 1. Harici Kütüphaneler ── -->
-  <script src="modules/lib/html2canvas.min.js"></script>
-  <script src="modules/lib/dxf-parser.browser.js"></script>
-  <script src="modules/lib/dxf-writer.browser.js"></script>
-  <script src="modules/lib/turf.min.js"></script>
-
-  <!-- ── 2. Parser ── -->
-  <script src="modules/parser/parser-v1-points.js"></script>
-
-  <!-- ── 3. Render ── -->
-  <script src="modules/render/points.js"></script>
-  <script src="modules/render/lines.js"></script>
-  <script src="modules/render/circle.js"></script>
-
-  <!-- ── 4. Loader ── -->
-  <script src="modules/loader/geojson-loader.js"></script>
-
-  <!-- ── 5. UI ── -->
-  <script src="modules/ui/label-toggle.js"></script>
-  <script src="modules/ui/text-toggle.js"></script>
-  <script src="modules/ui/z-toggle.js"></script>
-  <script src="modules/ui/layer-zoom.js"></script>
-  <script src="modules/ui/layer-color-picker.js"></script>
-  <script src="modules/ui/version-display.js"></script>
-
-  <!-- ── 6. Draw ── -->
-  <script src="modules/draw/snap.js"></script>
-  <script src="modules/draw/ortho-lock.js"></script>
-  <script src="modules/draw/add-point.js"></script>
-
-  <!-- ── 8. Export ── -->
-  <script src="modules/export/map-export.js"></script>
-  <script src="modules/export/export.js"></script>
-  <script src="modules/export/export-kml-csv.js"></script>
-  <script src="modules/export/export-dxf.js"></script>
-
-  <!-- ── Harici Servisler ── -->
-  <script src="modules/tsb/tsb-crypto.js"></script>
-  <!-- <script src="plugins/parcel-query.js"></script> -->
-
+<script src="bundle.min.js"></script>
 </body>
 
 </html>
