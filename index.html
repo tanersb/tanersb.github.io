@@ -2214,11 +2214,6 @@
           <button class="mob-tile-item" data-t="osm">🗺 OSM</button>
           <button class="mob-tile-item" data-t="topo">⛰ Topo</button>
         </div>
-        <button class="mob-ctrl-btn" id="mob-fit" title="Sığdır">
-          <svg viewBox="0 0 24 24">
-            <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
-          </svg>
-        </button>
         <button class="mob-ctrl-btn" id="mob-text" title="Yazılar" style="color:var(--acc2)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="4 7 4 4 20 4 20 7"></polyline>
@@ -2962,7 +2957,6 @@
       // ── Mob-Ctrl kısayolları ───────────────────────────────────
       (function () {
         const mobTheme = $('mob-theme');
-        const mobFit = $('mob-fit');
         const mobText = $('mob-text');
         const mobLabels = $('mob-labels');
         const mobZ = $('mob-z');
@@ -2970,9 +2964,6 @@
         const mobTileMenu = $('mob-tile-menu');
 
         if (mobTheme) mobTheme.addEventListener('click', () => $('themeBtn').click());
-        if (mobFit) mobFit.addEventListener('click', () => {
-          const btn = document.getElementById('ctrl-fit'); if (btn && !btn.disabled) btn.click();
-        });
 
         // Harita katmanı seçici
         if (mobTile && mobTileMenu) {
