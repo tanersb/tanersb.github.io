@@ -601,6 +601,46 @@
       background: var(--s2)
     }
 
+    /* Katman silme onay modalı */
+    #layer-del-modal {
+      position: fixed; inset: 0; z-index: 99998;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center;
+    }
+    #layer-del-modal.open { display: flex; }
+    .layer-del-card {
+      background: var(--s1); border: 1px solid var(--bd2);
+      border-radius: 12px; padding: 20px 20px 16px;
+      width: 260px; box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .layer-del-title {
+      font-size: 11px; font-weight: 700; color: var(--mt);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+    }
+    .layer-del-name {
+      font-size: 13px; font-weight: 700; color: var(--tx);
+      margin-bottom: 16px; word-break: break-all;
+    }
+    .layer-del-btns {
+      display: flex; gap: 8px;
+    }
+    .layer-del-btns button {
+      flex: 1; padding: 8px; border-radius: 6px;
+      font-size: 12px; font-weight: 700; cursor: pointer; border: none;
+    }
+    .layer-del-cancel {
+      background: var(--s2); color: var(--tx2);
+      border: 1px solid var(--bd) !important;
+    }
+    .layer-del-confirm {
+      background: #ef4444; color: #fff;
+    }
+    /* Uzun basış sırasında litem kırmızıya dönsün */
+    .litem.deleting {
+      background: rgba(239,68,68,0.12) !important;
+      border-radius: 6px;
+    }
+
     .litem.off .lname {
       opacity: .3
     }
@@ -2049,7 +2089,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF<span class="ver-badge" id="ver-badge">v1.6.1</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF<span class="ver-badge" id="ver-badge">v1.6.6</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -2253,6 +2293,17 @@
       </div>
     </div>
 
+  </div>
+
+    <div id="layer-del-modal">
+    <div class="layer-del-card">
+      <div class="layer-del-title">🗑 Katmanı Sil</div>
+      <div class="layer-del-name" id="layer-del-name">—</div>
+      <div class="layer-del-btns">
+        <button class="layer-del-cancel" id="layer-del-cancel">İptal</button>
+        <button class="layer-del-confirm" id="layer-del-confirm">Sil</button>
+      </div>
+    </div>
   </div>
 
     <div class="veil" id="veil"></div>
@@ -2631,6 +2682,13 @@
           });
           layers._reg = {};
         },
+        remove(lc) {
+          const l = layers._reg[lc];
+          if (!l) return;
+          if (l.group) { l.group.clearLayers(); l.group.removeFrom(map); }
+          delete layers._reg[lc];
+          events.emit('layer:removed', { lc });
+        },
       };
 
       // ── Katman listesi UI ──────────────────────────────────────────
@@ -2664,10 +2722,60 @@
             refreshLayerLists();
           });
           d.querySelector('.lcnt').addEventListener('click', ev => { ev.stopPropagation(); d.classList.toggle('exp'); });
+          bindDelPress(d, lc, info.name);
           box.appendChild(d); box.appendChild(opRow);
         }
         if (!shown) box.innerHTML = '<div class="l-empty">' + (entries.length ? 'Eşleşme yok' : 'Dosya yüklenmedi') + '</div>';
       }
+      // ── Katman silme modal ─────────────────────────────────────────
+      let _delLc = null;
+      const delModal   = $('layer-del-modal');
+      const delNameEl  = $('layer-del-name');
+      const delCancel  = $('layer-del-cancel');
+      const delConfirm = $('layer-del-confirm');
+
+      function openDelModal(lc, name) {
+        _delLc = lc;
+        delNameEl.textContent = name;
+        delModal.classList.add('open');
+      }
+      function closeDelModal() {
+        delModal.classList.remove('open');
+        _delLc = null;
+      }
+      delCancel.addEventListener('click', closeDelModal);
+      delModal.addEventListener('click', e => { if (e.target === delModal) closeDelModal(); });
+      delConfirm.addEventListener('click', () => {
+        if (_delLc == null) return;
+        layers.remove(_delLc);
+        closeDelModal();
+        refreshLayerLists();
+        if (NCZViewer?.snap) NCZViewer.snap.invalidate();
+        toast('Katman silindi', 'ok', 1800);
+      });
+
+      // Uzun basış ile silme — hem mouse hem touch
+      function bindDelPress(el, lc, name) {
+        let timer = null;
+        function start() {
+          timer = setTimeout(() => {
+            el.classList.add('deleting');
+            openDelModal(lc, name);
+          }, 600);
+        }
+        function end() {
+          clearTimeout(timer);
+          el.classList.remove('deleting');
+        }
+        el.addEventListener('mousedown',   start);
+        el.addEventListener('mouseup',     end);
+        el.addEventListener('mouseleave',  end);
+        el.addEventListener('touchstart',  (e) => { start(); }, { passive: true });
+        el.addEventListener('touchend',    end, { passive: true });
+        el.addEventListener('touchcancel', end, { passive: true });
+        el.addEventListener('contextmenu', e => e.preventDefault());
+      }
+
       function refreshLayerLists() {
         buildLayerList('ll-d', 'srch-d');
         buildLayerList('ll-m', 'srch-m');
@@ -3509,9 +3617,9 @@
   </script>
 
   
-          
+            
     
-        
+          
     
               
         
