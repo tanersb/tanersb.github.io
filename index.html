@@ -2131,7 +2131,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.7.5</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.7.6</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -3076,6 +3076,7 @@
 
       // ── Dosya yükleme ──────────────────────────────────────────────
       let _buf = null;
+      let _lastGeojson = null; // Son yüklenen GeoJSON/DXF/TSB verisi
       function handleFile(file) {
         if (!file) return;
 
@@ -3149,12 +3150,18 @@
         dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); handleFile(e.dataTransfer.files[0]); });
       });
       ['reparse-d', 'reparse-m'].forEach(id => $(id)?.addEventListener('click', () => {
-        if (!_buf) return;
+        if (!_buf && !_lastGeojson) return;
         map.closePopup();
         layers.clear();
         refreshLayerLists();
         events.emit('data:cleared', {});
-        events.emit('file:loaded', { buf: _buf, filename: '', epsg: _epsg });
+        if (_lastGeojson) {
+          // Son GeoJSON/DXF/TSB'yi tekrar yükle
+          events.emit('geojson:loaded', _lastGeojson);
+        } else {
+          // Son NCZ'yi tekrar yükle
+          events.emit('file:loaded', { buf: _buf, filename: '', epsg: _epsg });
+        }
       }));
 
       // ── Tema ─────────────────────────────────────────────────────
@@ -3352,6 +3359,23 @@
         }
         events.on('file:parsed', goLayers);
         events.on('geojson:loaded', goLayers);
+        // Dosya adını güncelle — DXF/GeoJSON/TSB/KML yüklenince
+        // handleFile dışından gelirse fn-d/fn-m güncellenmez.
+        // Her iki yükleme eventini dinleyerek her durumda güncelliyoruz.
+        events.on('geojson:loaded', ({ filename }) => {
+          if (filename) ['fn-d', 'fn-m'].forEach(id => { const el=$(id); if(el) el.textContent = filename; });
+        });
+        events.on('file:loaded', ({ filename }) => {
+          if (filename) ['fn-d', 'fn-m'].forEach(id => { const el=$(id); if(el) el.textContent = filename; });
+        });
+        // Son yüklenen GeoJSON'ı sakla — reparse için
+        events.on('geojson:loaded', (data) => {
+          _lastGeojson = data;
+          _buf = null; // GeoJSON yüklenince NCZ buffer'ı temizle
+        });
+        events.on('file:loaded', () => {
+          _lastGeojson = null; // NCZ yüklenince GeoJSON'ı temizle
+        });
       })();
 
       // ── Başlangıç: floater konumları ───────────────────────────
