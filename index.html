@@ -2131,7 +2131,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.7.6</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.7.7</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -2294,6 +2294,9 @@
         <button class="mtab" data-t="osm">OSM</button>
         <button class="mtab" data-t="sat">Uydu</button>
         <button class="mtab" data-t="topo">Topo</button>
+        <button class="mtab" data-t="tf_tr">Ulaşım</button>
+        <button class="mtab" data-t="google">Google</button>
+        <button class="mtab" data-t="googleh">G.Hibrit</button>
       </div>
             <div id="map-modules"></div>
             <div class="mob-ctrl" id="mob-ctrl">
@@ -2315,6 +2318,9 @@
           <button class="mob-tile-item" data-t="light">☀️ Açık</button>
           <button class="mob-tile-item" data-t="osm">🗺 OSM</button>
           <button class="mob-tile-item" data-t="topo">⛰ Topo</button>
+          <button class="mob-tile-item" data-t="tf_tr">🚌 Ulaşım</button>
+          <button class="mob-tile-item" data-t="google">🌍 Google</button>
+          <button class="mob-tile-item" data-t="googleh">🛰 G.Hibrit</button>
         </div>
         <button class="mob-ctrl-btn" id="mob-text" title="Yazılar" style="color:var(--acc2)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2680,20 +2686,26 @@
         maxZoom: 28
       });
 
+      const TF_KEY = 'cc847f48cc644751bea4905c238edf62';
       const TILES = {
-        dark: ['https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 22],
-        light: ['https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 22],
-        osm: ['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 22],
-        sat: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 18],
-        topo: ['https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 17],
+        dark:    ['https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',  '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 22, 'abcd'],
+        light:   ['https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 22, 'abcd'],
+        osm:     ['https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',             '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 22, 'abc'],
+        sat:     ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 18, null],
+        topo:    ['https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',               '<a href="https://www.linkedin.com/in/tanersb/" target="_blank">@tanersb</a>', 17, 'abc'],
+        tf_tr:   [`https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=${TF_KEY}`, '<a href="https://thunderforest.com">Thunderforest</a>', 22, null],
+        google:  ['https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=tr',   '© Google', 20, ['0','1','2','3']],
+        googleh: ['https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&hl=tr',   '© Google', 20, ['0','1','2','3']],
       };
 
       let _tile = null;
 
       function setTile(t) {
         if (_tile) map.removeLayer(_tile);
-        const [url, attr, maxNative] = TILES[t];
-        _tile = L.tileLayer(url, { attribution: attr, maxZoom: 28, maxNativeZoom: maxNative }).addTo(map);
+        const [url, attr, maxNative, sub] = TILES[t];
+        const opts = { attribution: attr, maxZoom: 28, maxNativeZoom: maxNative };
+        if (sub) opts.subdomains = sub;
+        _tile = L.tileLayer(url, opts).addTo(map);
         $$('.mtab').forEach(b => b.classList.toggle('active', b.dataset.t === t));
       }
 
