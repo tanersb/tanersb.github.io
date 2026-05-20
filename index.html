@@ -537,6 +537,25 @@
       flex-shrink: 0
     }
 
+    .lcbtn.add:hover { border-color:var(--acc2); color:var(--acc2) }
+    #layer-add-modal { position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center }
+    #layer-add-modal.open { display:flex }
+    .layer-add-card { background:var(--s1);border:1px solid var(--bd2);border-radius:12px;padding:20px;width:280px;box-shadow:0 16px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:12px }
+    .layer-add-title { font-size:11px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:0.5px }
+    .layer-add-row { display:flex;flex-direction:column;gap:4px }
+    .layer-add-row label { font-size:10px;color:var(--mt);text-transform:uppercase;letter-spacing:0.3px }
+    .layer-add-row input[type="text"] { background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:6px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px }
+    .layer-add-colors { display:flex;gap:6px;flex-wrap:wrap }
+    .layer-add-col { width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.15s;flex-shrink:0 }
+    .layer-add-col.sel { border-color:#fff;box-shadow:0 0 0 2px var(--acc2) }
+    .layer-add-custom { display:flex;gap:6px;align-items:center;margin-top:6px }
+    .layer-add-custom input[type="color"] { width:28px;height:28px;border:1px solid var(--bd);border-radius:5px;cursor:pointer;padding:1px;background:var(--s2) }
+    .layer-add-custom input[type="text"] { flex:1;background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:5px 8px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11px }
+    .layer-add-btns { display:flex;gap:8px }
+    .layer-add-btns button { flex:1;padding:8px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:none }
+    .layer-add-cancel { background:var(--s2);color:var(--tx2);border:1px solid var(--bd) !important }
+    .layer-add-confirm { background:var(--acc2);color:#fff }
+
     .lcbtn {
       display: flex;
       align-items: center;
@@ -2112,7 +2131,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.7.2</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.7.5</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -2200,6 +2219,9 @@
             <div id="sidebar-modules"></div>
       <div id="lsec-d" style="display:none">
         <div class="lc-strip">
+          <button class="lcbtn add" id="add-layer-d" title="Yeni Katman Ekle" style="padding:5px 8px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
           <button class="lcbtn" id="show-d">👁 Göster</button>
           <button class="lcbtn" id="hide-d">🙈 Gizle</button>
           <button class="lcbtn del" id="clear-d">🗑 Temizle</button>
@@ -2346,6 +2368,28 @@
 
   </div>
 
+    <div id="layer-add-modal">
+    <div class="layer-add-card">
+      <div class="layer-add-title">+ Yeni Katman</div>
+      <div class="layer-add-row">
+        <label>Katman Adı</label>
+        <input type="text" id="layer-add-name" placeholder="YENI_KATMAN" maxlength="64"/>
+      </div>
+      <div class="layer-add-row">
+        <label>Renk</label>
+        <div class="layer-add-colors" id="layer-add-palette"></div>
+        <div class="layer-add-custom">
+          <input type="color" id="layer-add-picker" value="#60a5fa"/>
+          <input type="text" id="layer-add-hex" value="#60A5FA" maxlength="7" placeholder="#RRGGBB"/>
+        </div>
+      </div>
+      <div class="layer-add-btns">
+        <button class="layer-add-cancel" id="layer-add-cancel">İptal</button>
+        <button class="layer-add-confirm" id="layer-add-confirm">Ekle</button>
+      </div>
+    </div>
+  </div>
+
     <div id="layer-del-modal">
     <div class="layer-del-card">
       <div class="layer-del-title">🗑 Katmanı Sil</div>
@@ -2433,6 +2477,9 @@
             <div class="bs-panel" data-bs-panel="katmanlar">
         <div id="lsec-m" style="display:none">
           <div class="lc-strip">
+            <button class="lcbtn add" id="add-layer-m" title="Yeni Katman Ekle" style="padding:5px 8px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
             <button class="lcbtn" id="show-m">👁 Göster</button>
             <button class="lcbtn" id="hide-m">🙈 Gizle</button>
             <button class="lcbtn del" id="clear-m">🗑 Temizle</button>
@@ -2630,9 +2677,7 @@
         zoomControl: true,
         scrollWheelZoom: true,
         preferCanvas: true,
-        maxZoom: 28,
-        clickTolerance: 1,
-        tap: false,
+        maxZoom: 28
       });
 
       const TILES = {
@@ -2833,6 +2878,96 @@
         buildLayerList('ll-d', 'srch-d');
         buildLayerList('ll-m', 'srch-m');
       }
+
+      // ── Yeni Katman Ekleme ─────────────────────────────────────────
+      (function () {
+        const PAL = ['#60a5fa','#4ade80','#fbbf24','#f87171','#a78bfa',
+                     '#06b6d4','#f472b6','#fb923c','#34d399','#e879f9'];
+        const modal   = $('layer-add-modal');
+        const nameInp = $('layer-add-name');
+        const palette = $('layer-add-palette');
+        const picker  = $('layer-add-picker');
+        const hexInp  = $('layer-add-hex');
+        let selColor  = PAL[0];
+
+        PAL.forEach(c => {
+          const d = document.createElement('div');
+          d.className = 'layer-add-col' + (c === selColor ? ' sel' : '');
+          d.style.background = c;
+          d.onclick = () => {
+            selColor = c; picker.value = c; hexInp.value = c.toUpperCase();
+            palette.querySelectorAll('.layer-add-col').forEach(x => x.classList.remove('sel'));
+            d.classList.add('sel');
+          };
+          palette.appendChild(d);
+        });
+
+        picker.oninput = e => {
+          selColor = e.target.value; hexInp.value = selColor.toUpperCase();
+          palette.querySelectorAll('.layer-add-col').forEach(x => x.classList.remove('sel'));
+        };
+        hexInp.oninput = e => {
+          if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { selColor = e.target.value; picker.value = selColor; }
+        };
+
+        function openAddModal() {
+          const existing = new Set(Object.values(layers._reg || {}).map(l => l.name));
+          let base = 'YENI_KATMAN', i = 1;
+          while (existing.has(base)) { base = 'YENI_KATMAN' + i++; }
+          nameInp.value = base;
+          modal.classList.add('open');
+          setTimeout(() => { nameInp.focus(); nameInp.select(); }, 50);
+        }
+
+        function closeAddModal() { modal.classList.remove('open'); }
+
+        $('layer-add-cancel').onclick = closeAddModal;
+        modal.addEventListener('click', e => { if (e.target === modal) closeAddModal(); });
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && modal.classList.contains('open')) closeAddModal();
+          if (e.key === 'Enter'  && modal.classList.contains('open')) $('layer-add-confirm').click();
+        });
+
+        $('layer-add-confirm').onclick = () => {
+          const name = nameInp.value.trim();
+          if (!name) { toast('Katman adı boş olamaz', 'err', 1500); return; }
+          const color = /^#[0-9A-Fa-f]{6}$/.test(hexInp.value) ? hexInp.value : selColor;
+          const existing = Object.keys(layers._reg || {}).map(Number).filter(n => !isNaN(n));
+          const newLc = existing.length > 0 ? Math.max(...existing) + 1 : 1;
+          const group = L.layerGroup().addTo(map);
+          const info  = layers.register(newLc, name, group);
+          if (info) info.color = color;
+          closeAddModal();
+          refreshLayerLists();
+          showLayerUI();
+
+          // ── ÖNEMLİ: Yeni katman aktif katman seçicilerine eklenmeli ──
+          // add-point.js ve add-line.js kendi dropdown'larını (activeLayerSelect,
+          // lineLayerSelect) v1:points:parsed eventinde dolduruyor.
+          // Kullanıcı buradan yeni katman eklediğinde bu event tekrar tetiklenmez,
+          // bu yüzden dropdown'ları burada elle güncelliyoruz ve 'layer:added'
+          // eventini emit ediyoruz. add-point.js bu eventi dinleyip kendi
+          // dropdown'ını da günceller. Aynı mantığı kullanan her yeni modül
+          // 'layer:added' eventini dinlemelidir.
+          ['activeLayerSelect', 'lineLayerSelect'].forEach(sid => {
+            const sel = document.getElementById(sid);
+            if (!sel) return;
+            if (!sel.querySelector(`option[value="${newLc}"]`)) {
+              const opt = document.createElement('option');
+              opt.value = newLc; opt.textContent = name;
+              sel.appendChild(opt);
+            }
+            sel.value = newLc;
+          });
+          events.emit('layer:added', { lc: newLc, name, color });
+          toast(`"${name}" katmanı eklendi`, 'ok', 1800);
+        };
+
+        ['add-layer-d', 'add-layer-m'].forEach(id => {
+          const btn = $(id);
+          if (btn) btn.addEventListener('click', openAddModal);
+        });
+      })();
 
       // ── Arama ─────────────────────────────────────────────────────
       ['srch-d', 'srch-m'].forEach(id => $(id)?.addEventListener('input', refreshLayerLists));
@@ -3670,12 +3805,13 @@
   </script>
 
   
-            
+          
     
           
     
               
           
+    
           
       <!-- <script src="plugins/parcel-query.js"></script> -->
 
