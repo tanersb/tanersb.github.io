@@ -1041,6 +1041,12 @@
       color: var(--tx)
     }
 
+    .pop-btn-del:hover {
+      background: rgba(239,68,68,0.15) !important;
+      border-color: var(--red) !important;
+      color: var(--red) !important;
+    }
+
     /* Leaflet Tooltip arkaplanını tamamen saydam ve tıklanamaz yapıyoruz */
     .ncz-lbl-transparent {
       background: transparent !important;
@@ -1523,6 +1529,43 @@
     .mob-tile-menu.open {
       display: block;
     }
+
+    /* Düzenleme araçları menüsü — tile menüsüyle aynı yapı */
+    .mob-edit-menu {
+      display: none;
+      position: absolute;
+      right: 40px;
+      top: 34px;
+      background: var(--s1);
+      border: 1px solid var(--bd2);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px var(--shadow);
+      z-index: 431;
+      white-space: nowrap;
+      min-width: 160px;
+    }
+    .mob-edit-menu.open { display: block; }
+    .mob-edit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      color: var(--tx2);
+      cursor: pointer;
+      text-align: left;
+      border-bottom: 1px solid var(--bd);
+      font-family: inherit;
+      transition: .15s;
+    }
+    .mob-edit-item:last-child { border-bottom: none; }
+    .mob-edit-item:hover { background: var(--s2); color: var(--tx); }
+    .mob-edit-item.active { color: var(--acc2); }
 
     .mob-tile-item {
       display: block;
@@ -2131,7 +2174,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.0</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.2</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -2362,10 +2405,34 @@
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
           </svg>
         </button>
-      </div>
+                <div class="mob-edit-menu" id="mob-edit-menu">
+          <button class="mob-edit-item" id="mob-edit-addpoint">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+            Nokta Ekle
+          </button>
+          <button class="mob-edit-item" id="mob-edit-addline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="19" x2="19" y2="5"/><circle cx="5" cy="19" r="2.5" fill="currentColor" stroke="none"/><circle cx="19" cy="5" r="2.5" fill="currentColor" stroke="none"/></svg>
+            Çizgi Ekle
+          </button>
+          <button class="mob-edit-item" id="mob-edit-copy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Obje Kopyala
+          </button>
+          <button class="mob-edit-item" id="mob-edit-move">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>
+            Obje Taşı
+          </button>
+          <button class="mob-edit-item" id="mob-edit-delete" style="color:var(--red,#ef4444)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            Obje Sil
+          </button>
+          <button class="mob-edit-item" id="mob-edit-measure">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M6 8v8M10 10v4M14 10v4M18 8v8"/></svg>
+            Ölçüm
+          </button>
+        </div>
+              </div>
     </div>
-
-  </div>
 
     <div id="layer-add-modal">
     <div class="layer-add-card">
@@ -3030,6 +3097,9 @@
         const defaultBtns = `
       <button class="pop-btn" title="Bu noktaya yaklaş" onclick="NCZViewer.popZoom(${latlng.lat},${latlng.lng})">🔍</button>
       <button class="pop-btn" title="Koordinatı kopyala" onclick="NCZViewer.popCopy(this,'Lat: ${latlng.lat.toFixed(6)}, Lon: ${latlng.lng.toFixed(6)}')">📋</button>
+      <button class="pop-btn" title="Objeyi Kopyala" onclick="NCZViewer.popObjCopy && NCZViewer.popObjCopy(this)">⧉</button>
+      <button class="pop-btn" title="Objeyi Taşı"    onclick="NCZViewer.popObjMove && NCZViewer.popObjMove(this)">✥</button>
+      <button class="pop-btn pop-btn-del" title="Objeyi Sil" onclick="NCZViewer.popObjDelete && NCZViewer.popObjDelete(this)">🗑</button>
     `;
         return `<div>
       <div class="pop-hd">Öznitelikler</div>
@@ -3041,6 +3111,52 @@
       function popCopy(btn, txt) {
         navigator.clipboard?.writeText(txt).catch(() => { });
         btn.textContent = '✓'; setTimeout(() => btn.textContent = '📋', 1500);
+      }
+
+      // ── Popup obje aksiyonları ─────────────────────────────────────
+      // Popup içindeki butona tıklayınca o popup'ın bağlı olduğu
+      // Leaflet marker'ını bulup ilgili modülü tetikler.
+      function _popupMarker(btn) {
+        // btn → pop-actions → div (pop wrapper) → popup içerik → L.Popup
+        const popup = map._popup;
+        return popup?._source || null;
+      }
+      function popObjCopy(btn) {
+        const src = _popupMarker(btn);
+        map.closePopup();
+        if (NCZViewer.copy?.startCopy) { NCZViewer.copy.startCopy(src); return; }
+        // Fallback: copy modülü yoksa event ile dene
+        events.emit('obj:copy', { marker: src });
+      }
+      function popObjMove(btn) {
+        const src = _popupMarker(btn);
+        map.closePopup();
+        if (NCZViewer.move?.startMove) { NCZViewer.move.startMove(src); return; }
+        events.emit('obj:move', { marker: src });
+      }
+      function popObjDelete(btn) {
+        const src = _popupMarker(btn);
+        if (!src) return;
+        map.closePopup();
+        // Marker'ın bağlı olduğu katmanı bul ve sil
+        let deleted = false;
+        for (const [lc, info] of layers.all()) {
+          if (!info.group) continue;
+          info.group.eachLayer(layer => {
+            if (layer === src) {
+              info.group.removeLayer(layer);
+              deleted = true;
+            }
+          });
+          if (deleted) break;
+        }
+        if (deleted) {
+          toast('Obje silindi', 'ok', 1500);
+          if (NCZViewer.snap) NCZViewer.snap.invalidate();
+          refreshLayerLists();
+        } else {
+          toast('Obje bulunamadı', 'err', 1500);
+        }
       }
 
       // ── Katman kontrol butonları ───────────────────────────────────
@@ -3379,9 +3495,45 @@
         if (mobEdit) mobEdit.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          const btn = document.getElementById('editToolbarBtn');
-          if (btn) btn.click();
+          const menu = $('mob-edit-menu');
+          if (menu) {
+            menu.classList.toggle('open');
+          } else {
+            // Fallback: eski davranış
+            const btn = document.getElementById('editToolbarBtn');
+            if (btn) btn.click();
+          }
         });
+
+        // Düzenleme menüsü item'ları
+        const mobEditMenu = $('mob-edit-menu');
+        if (mobEditMenu) {
+          // Nokta Ekle
+          const eiAddPoint = $('mob-edit-addpoint');
+          if (eiAddPoint) eiAddPoint.addEventListener('click', () => {
+            mobEditMenu.classList.remove('open');
+            const btn = document.getElementById('addPointBtn');
+            if (btn) btn.click();
+          });
+          // Çizgi Ekle
+          const eiAddLine = $('mob-edit-addline');
+          if (eiAddLine) eiAddLine.addEventListener('click', () => {
+            mobEditMenu.classList.remove('open');
+            const btn = document.getElementById('addLineBtn');
+            if (btn) btn.click();
+          });
+          // Ölçüm
+          const eiMeasure = $('mob-edit-measure');
+          if (eiMeasure) eiMeasure.addEventListener('click', () => {
+            mobEditMenu.classList.remove('open');
+            const btn = document.getElementById('msrBtn');
+            if (btn) btn.click();
+          });
+          // Başka yere tıklayınca kapat
+          document.addEventListener('click', (e) => {
+            if (!mobEdit.contains(e.target)) mobEditMenu.classList.remove('open');
+          });
+        }
       })();
 
       // ── Dosya yüklenince otomatik sekme geçişi ─────────────────
@@ -3617,7 +3769,7 @@
         calcUTM,
         copyText,
         // Popup helpers
-        popZoom, popCopy,
+        popZoom, popCopy, popObjCopy, popObjMove, popObjDelete,
         // Modül kayıt
         registerModule,
         // Dosya buffer (parser modülü için)
@@ -3898,8 +4050,8 @@
       
                 
                 
-    
-          
+      
+            
       <!-- <script src="plugins/parcel-query.js"></script> -->
 
 <script src="bundle.min.js"></script>
