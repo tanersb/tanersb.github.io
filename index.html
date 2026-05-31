@@ -1313,7 +1313,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      z-index: 500;
+      z-index: 760;
       background: var(--s1);
       border-top: 1px solid var(--bd2);
       border-radius: 16px 16px 0 0;
@@ -2131,7 +2131,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.7.7</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.0</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -2168,12 +2168,12 @@
       <div class="sec">
         <div class="sec-t">Dosya</div>
         <div class="dz" id="dz-d">
-          <input type="file" id="fi-d" accept=".ncz,.NCZ,.geojson,.json,.tsb,.TSB">
+          <input type="file" id="fi-d" accept=".ncz,.NCZ,.ncn,.NCN,.geojson,.json,.tsb,.TSB">
           <div class="dz-ico"><svg viewBox="0 0 24 24">
               <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
             </svg></div>
           <div class="dz-title">Dosya Sürükle veya Tıkla</div>
-          <div class="dz-sub">otomatik algılanır · .ncz · .geojson · .json</div>
+          <div class="dz-sub">otomatik algılanır · .ncz · .ncn · .geojson · .json</div>
         </div>
         <div class="fname" id="fn-d">dosya seçilmedi</div>
       </div>
@@ -2356,17 +2356,10 @@
             <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>
           </svg>
         </button>
-        <button class="mob-ctrl-btn" id="mob-add-point" title="Nokta Ekle" style="color:var(--tx2)">
+        <button class="mob-ctrl-btn" id="mob-edit" title="Düzenleme Araçları" style="color:var(--tx2)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 5v14M5 12h14"/>
-            <circle cx="12" cy="12" r="1" fill="currentColor"/>
-          </svg>
-        </button>
-        <button class="mob-ctrl-btn" id="mob-add-line" title="Çizgi Ekle" style="color:var(--tx2)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="19" x2="19" y2="5"/>
-            <circle cx="5"  cy="19" r="2" fill="currentColor" stroke="none"/>
-            <circle cx="19" cy="5"  r="2" fill="currentColor" stroke="none"/>
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
           </svg>
         </button>
       </div>
@@ -2435,7 +2428,7 @@
                 <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
               </svg></div>
             <div class="dz-title">Dosya Sürükle veya Tıkla</div>
-            <div class="dz-sub">NCZ · GeoJSON · DXF · TSB</div>
+            <div class="dz-sub">NCZ · NCN · GeoJSON · DXF · TSB</div>
           </div>
           <div class="fname" id="fn-m">dosya seçilmedi</div>
         </div>
@@ -3089,11 +3082,12 @@
       // ── Dosya yükleme ──────────────────────────────────────────────
       let _buf = null;
       let _lastGeojson = null; // Son yüklenen GeoJSON/DXF/TSB verisi
+      let _lastNCN     = null; // Son yüklenen NCN verisi { text, filename, epsg }
       function handleFile(file) {
         if (!file) return;
 
         const ext = file.name.split('.').pop().toLowerCase();
-        const allowed = ['ncz', 'geojson', 'json', 'tsb'];
+        const allowed = ['ncz', 'geojson', 'json', 'tsb', 'ncn'];
         if (!allowed.includes(ext)) {
           toast(`Desteklenmeyen dosya: .${ext} — NCZ, GeoJSON veya TSB yükle`, 'err', 4000);
           return;
@@ -3105,8 +3099,25 @@
         refreshLayerLists();
         hideLayerUI();
         events.emit('data:cleared', {});
+        _lastNCN = null; // Yeni dosya yüklenince NCN verisini temizle
 
         const isGeoJSON = ext === 'geojson' || ext === 'json';
+
+        // ── .NCN nokta koordinat formatı ──────────────────────────────
+        if (ext === 'ncn') {
+          loading(true);
+          const reader = new FileReader();
+          reader.onload = e => {
+            const payload = { text: e.target.result, filename: file.name, epsg: _epsg };
+            _lastNCN     = payload;  // reparse için sakla
+            _buf         = null;     // NCZ buffer'ı temizle
+            _lastGeojson = null;     // GeoJSON verisini temizle
+            events.emit('ncn:loaded', payload);
+          };
+          reader.onerror = () => { toast('Dosya okunamadı', 'err'); loading(false); };
+          reader.readAsText(file, 'UTF-8');
+          return;
+        }
 
         // ── .TSB şifreli format ───────────────────────────────────────
         if (ext === 'tsb') {
@@ -3162,7 +3173,7 @@
         dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('over'); handleFile(e.dataTransfer.files[0]); });
       });
       ['reparse-d', 'reparse-m'].forEach(id => $(id)?.addEventListener('click', () => {
-        if (!_buf && !_lastGeojson) return;
+        if (!_buf && !_lastGeojson && !_lastNCN) return;
         map.closePopup();
         layers.clear();
         refreshLayerLists();
@@ -3170,6 +3181,8 @@
         if (_lastGeojson) {
           // Son GeoJSON/DXF/TSB'yi tekrar yükle
           events.emit('geojson:loaded', _lastGeojson);
+        } else if (_lastNCN) {
+          events.emit('ncn:loaded', _lastNCN);
         } else {
           // Son NCZ'yi tekrar yükle
           events.emit('file:loaded', { buf: _buf, filename: '', epsg: _epsg });
@@ -3203,7 +3216,8 @@
         const base = h > 0 ? h : 0;
         // iPhone safe-area-inset-bottom değerini oku (home indicator için)
         const safeBottom = window._safeAreaBottom || 0;
-        if (fab) fab.style.bottom = (base + 16 + safeBottom) + 'px';
+        const statusBarHeight = document.getElementById('status-bar')?.offsetHeight || 0;
+        if (fab) fab.style.bottom = (base + statusBarHeight + 12 + safeBottom) + 'px';
         if (cbar) cbar.style.bottom = (base + 12 + safeBottom) + 'px';
         // mob-ctrl sağ üstte sabit, sheet'ten bağımsız
       }
@@ -3310,6 +3324,7 @@
         const mobZ = $('mob-z');
         const mobTile = $('mob-tile');
         const mobTileMenu = $('mob-tile-menu');
+        const mobEdit = $('mob-edit');
 
         if (mobTheme) mobTheme.addEventListener('click', () => $('themeBtn').click());
 
@@ -3360,6 +3375,13 @@
             setTimeout(() => { mobZ.style.color = btn.style.color || ''; }, 50);
           }
         });
+
+        if (mobEdit) mobEdit.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const btn = document.getElementById('editToolbarBtn');
+          if (btn) btn.click();
+        });
       })();
 
       // ── Dosya yüklenince otomatik sekme geçişi ─────────────────
@@ -3383,15 +3405,41 @@
         // Son yüklenen GeoJSON'ı sakla — reparse için
         events.on('geojson:loaded', (data) => {
           _lastGeojson = data;
-          _buf = null; // GeoJSON yüklenince NCZ buffer'ı temizle
+          _buf     = null; // GeoJSON yüklenince NCZ buffer'ı temizle
+          _lastNCN = null;
         });
         events.on('file:loaded', () => {
           _lastGeojson = null; // NCZ yüklenince GeoJSON'ı temizle
+          _lastNCN     = null;
+        });
+
+        // NCN yüklenince dosya adını güncelle
+        events.on('ncn:loaded', ({ filename }) => {
+          if (filename) ['fn-d', 'fn-m'].forEach(id => {
+            const el = $(id); if (el) el.textContent = filename;
+          });
+        });
+        // NCN yüklenince diğer format değişkenlerini temizle
+        events.on('ncn:loaded', (data) => {
+          _lastNCN     = data;
+          _lastGeojson = null;
+          _buf         = null;
         });
       })();
 
       // ── Başlangıç: floater konumları ───────────────────────────
       _positionFloaters(0);
+
+      let _floaterSyncTry = 0;
+      function _syncFloatersAfterModules() {
+        _positionFloaters(_sheetH);
+        const sb = document.getElementById('status-bar');
+        if (!sb && _floaterSyncTry < 20) {
+          _floaterSyncTry += 1;
+          setTimeout(_syncFloatersAfterModules, 100);
+        }
+      }
+      window.addEventListener('load', _syncFloatersAfterModules);
 
       // ── Merkezi FitBounds — tüm katmanlar yüklendikten sonra ─────
       (function () {
@@ -3412,7 +3460,10 @@
             });
           });
           if (allPts.length > 0) {
-            try { map.fitBounds(L.latLngBounds(allPts).pad(0.08), { animate: true }); } catch (_) { }
+            try {
+              const bounds = L.latLngBounds(allPts).pad(0.08);
+              map.fitBounds(bounds, { animate: true, maxZoom: 17 });
+            } catch (_) { }
           }
         }
         function scheduleFit() {
@@ -3635,7 +3686,7 @@
           NCZViewer.ui.toast('Görünür geometri yok', 'info', 2000);
           return;
         }
-        NCZViewer.map.fitBounds(L.latLngBounds(pts).pad(0.05), { animate: true });
+        NCZViewer.map.fitBounds(L.latLngBounds(pts).pad(0.05), { animate: true, maxZoom: 17 });
       });
 
       // fit butonu → dosya yüklenince aktif et
@@ -3844,9 +3895,9 @@
           
     
           
-    
-              
-          
+      
+                
+                
     
           
       <!-- <script src="plugins/parcel-query.js"></script> -->
