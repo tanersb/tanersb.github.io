@@ -1296,6 +1296,12 @@
       color: var(--tx)
     }
 
+    .toast.warn {
+      background: #451a03;
+      border: 1px solid #d97706;
+      color: #fde68a;
+    }
+
     /* ── COORDS BAR z-index override ── */
     /* (cbar base z-index: 180, burada mobile override) */
 
@@ -2174,7 +2180,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1-8-5-1077</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1-8-5-3434</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -2595,9 +2601,9 @@
     <div class="ctx-coords">
       <span>Lat (Kuzey): <b id="ctx-lat">—</b></span>
       <span>Lon (Doğu): <b id="ctx-lon">—</b></span>
-      <span style="margin-top:5px;padding-top:5px;border-top:1px solid var(--bd)">Y UTM (Kuzey): <b
-          id="ctx-north">—</b></span>
-      <span>X UTM (Doğu): <b id="ctx-east">—</b></span>
+      <span style="margin-top:5px;padding-top:5px;border-top:1px solid var(--bd)">Y UTM (Doğu): <b
+          id="ctx-east">—</b></span>
+      <span>X UTM (Kuzey): <b id="ctx-north">—</b></span>
     </div>
         <div id="ctx-modules"></div>
     <div class="ctx-row" id="ctx-cll">
@@ -2754,7 +2760,7 @@
         _ll = latlng; _utm = calcUTM(latlng);
         const prefix = clicked ? '📍 ' : '';
         $('cbar-ll').textContent = `${prefix}Lat: ${latlng.lat.toFixed(6)}  Lon: ${latlng.lng.toFixed(6)}`;
-        $('cbar-utm').textContent = _utm ? `Y: ${_utm.N.toFixed(2)}  X: ${_utm.E.toFixed(2)}` : '';
+        $('cbar-utm').textContent = _utm ? `Y: ${_utm.E.toFixed(4)}  X: ${_utm.N.toFixed(4)}` : '';
       }
       map.on('mousemove', e => updateCbar(e.latlng));
       map.on('click', e => { updateCbar(e.latlng, true); events.emit('map:click', { latlng: e.latlng, utm: _utm }); });
@@ -2764,6 +2770,9 @@
       function closeCtx() { ctxEl.style.display = 'none'; }
       map.on('contextmenu', e => {
         e.originalEvent.preventDefault();
+        // Yakalama modu açıksa (büyüteç devrede olacağından) context menüyü gösterme
+        if (typeof NCZViewer !== 'undefined' && NCZViewer.snap?.isEnabled?.()) return;
+        
         _ll = e.latlng; _utm = calcUTM(e.latlng);
         $('ctx-lat').textContent = e.latlng.lat.toFixed(6);
         $('ctx-lon').textContent = e.latlng.lng.toFixed(6);
@@ -2786,7 +2795,7 @@
       $('ctx-cll').addEventListener('click', () => { if (_ll) copyText(`Lat: ${_ll.lat.toFixed(6)}, Lon: ${_ll.lng.toFixed(6)}`); closeCtx(); });
       $('ctx-cutm').addEventListener('click', () => {
         if (!_utm) { toast('UTM hesaplanamadı', 'err'); return; }
-        copyText(`Y: ${_utm.N.toFixed(3)}, X: ${_utm.E.toFixed(3)} (EPSG:${_epsg})`);
+        copyText(`Y: ${_utm.E.toFixed(3)}, X: ${_utm.N.toFixed(3)} (EPSG:${_epsg})`);
         closeCtx();
       });
 
