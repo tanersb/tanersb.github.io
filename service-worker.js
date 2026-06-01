@@ -68,7 +68,7 @@
 // ── CACHE VERSİYONU ───────────────────────────────────────────────
 // Dosyalar değiştiğinde bu numarayı artır → eski cache otomatik silinir.
 // Format: 'gisviewer-vN' — N'i her deploy'da 1 artır.
-const CACHE_VERSION = 'gisviewer-v2';
+const CACHE_VERSION = 'gisviewer-v1780343784701';
 
 // ── ÖNBELLEĞe ALINACAK DOSYALAR ──────────────────────────────────
 // Tüm uygulama dosyaları burada listelenmiştir.
@@ -77,73 +77,22 @@ const CACHE_VERSION = 'gisviewer-v2';
 // DIKKAT: Bir dosya bile 404 dönerse install başarısız olur.
 // Emin olmadığın dosyaları OPTIONAL_FILES listesine koy.
 const CACHE_FILES = [
-
-  // ── Temel ──────────────────────────────────────────────────────
   '/',
   '/index.html',
+  '/bundle.min.js',
   '/site.webmanifest',
-
-  // ── İkonlar ────────────────────────────────────────────────────
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/apple-touch-icon.png',
   '/icons/favicon.svg',
   '/icons/favicon-32.png',
-  '/icons/favicon-16.png',
-
-  // ── Harici kütüphaneler (CDN yerine lokal kopyalar) ────────────
-  '/modules/lib/html2canvas.min.js',
-  '/modules/lib/dxf-parser.browser.js',
-  '/modules/lib/dxf-writer.browser.js',
-  '/modules/lib/turf.min.js',
-
-  // ── 2. Parser ──────────────────────────────────────────────────
-  '/modules/parser/parser-v1-points.js',
-
-  // ── 3. Render ──────────────────────────────────────────────────
-  '/modules/render/points.js',
-  '/modules/render/lines.js',
-  '/modules/render/circle.js',
-  '/modules/render/triangle-renderer.js',
-
-  // ── 4. Loader ──────────────────────────────────────────────────
-  '/modules/loader/geojson-loader.js',
-
-  // ── 5. UI ──────────────────────────────────────────────────────
-  '/modules/ui/label-toggle.js',
-  '/modules/ui/text-toggle.js',
-  '/modules/ui/z-toggle.js',
-  '/modules/ui/layer-zoom.js',
-  '/modules/ui/layer-color-picker.js',
-  '/modules/ui/version-display.js',
-  '/modules/ui/file-history.js',     // yeni eklendi
-
-  // ── 6. Draw ────────────────────────────────────────────────────
-  '/modules/draw/snap.js',
-  '/modules/draw/ortho-lock.js',
-  '/modules/draw/add-point.js',
-  '/modules/draw/add-line.js',
-
-  // ── 7. Tools ───────────────────────────────────────────────────
-  '/modules/tools/parsel-sorgu.js',
-  '/modules/tools/measure.js',        // yeni eklendi
-
-  // ── 8. Export ──────────────────────────────────────────────────
-  '/modules/export/map-export.js',
-  '/modules/export/export.js',
-  '/modules/export/export-kml-csv.js',
-  '/modules/export/export-dxf.js',
-
-  // ── Harici servisler ───────────────────────────────────────────
-  '/modules/tsb/tsb-crypto.js',
+  '/icons/favicon-16.png'
 ];
 
 // ── OPSİYONEL DOSYALAR ───────────────────────────────────────────
 // Bunlar önbelleğe alınamazsa install başarısız OLMAZ.
 // Varlığından emin olmadığın dosyaları buraya koy.
-const OPTIONAL_FILES = [
-  '/modules/tsb/tsb-crypto.js',  // opsiyonel servis
-];
+const OPTIONAL_FILES = [];
 
 // ── TILE KAYNAKLARI (Network-First stratejisi) ────────────────────
 // Bu domain'lerden gelen istekler için önce ağ denenir.
