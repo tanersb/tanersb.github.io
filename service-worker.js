@@ -68,7 +68,7 @@
 // ── CACHE VERSİYONU ───────────────────────────────────────────────
 // Dosyalar değiştiğinde bu numarayı artır → eski cache otomatik silinir.
 // Format: 'gisviewer-vN' — N'i her deploy'da 1 artır.
-const CACHE_VERSION = 'gisviewer-v1780345306828';
+const CACHE_VERSION = 'gisviewer-v1780345847244';
 
 // ── ÖNBELLEĞe ALINACAK DOSYALAR ──────────────────────────────────
 // Tüm uygulama dosyaları burada listelenmiştir.
