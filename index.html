@@ -2174,7 +2174,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.3</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.5.95</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -3508,27 +3508,24 @@
         // Düzenleme menüsü item'ları
         const mobEditMenu = $('mob-edit-menu');
         if (mobEditMenu) {
-          // Nokta Ekle
-          const eiAddPoint = $('mob-edit-addpoint');
-          if (eiAddPoint) eiAddPoint.addEventListener('click', () => {
-            mobEditMenu.classList.remove('open');
-            const btn = document.getElementById('addPointBtn');
-            if (btn) btn.click();
-          });
-          // Çizgi Ekle
-          const eiAddLine = $('mob-edit-addline');
-          if (eiAddLine) eiAddLine.addEventListener('click', () => {
-            mobEditMenu.classList.remove('open');
-            const btn = document.getElementById('addLineBtn');
-            if (btn) btn.click();
-          });
-          // Ölçüm
-          const eiMeasure = $('mob-edit-measure');
-          if (eiMeasure) eiMeasure.addEventListener('click', () => {
-            mobEditMenu.classList.remove('open');
-            const btn = document.getElementById('msrBtn');
-            if (btn) btn.click();
-          });
+          const bindMobEdit = (mobId, deskId) => {
+            const mBtn = $(mobId);
+            if (mBtn) {
+              mBtn.addEventListener('click', () => {
+                mobEditMenu.classList.remove('open');
+                const dBtn = document.getElementById(deskId);
+                if (dBtn) dBtn.click();
+              });
+            }
+          };
+
+          bindMobEdit('mob-edit-addpoint', 'edit-tool-addpoint');
+          bindMobEdit('mob-edit-addline',  'edit-tool-addline');
+          bindMobEdit('mob-edit-copy',     'edit-tool-copy');
+          bindMobEdit('mob-edit-move',     'edit-tool-move');
+          bindMobEdit('mob-edit-delete',   'edit-tool-delete');
+          bindMobEdit('mob-edit-measure',  'msrBtn'); // Measure has its own button
+
           // Başka yere tıklayınca kapat
           document.addEventListener('click', (e) => {
             if (!mobEdit.contains(e.target)) mobEditMenu.classList.remove('open');
@@ -4048,8 +4045,8 @@
     
           
       
-                
-                
+                    
+                    
       
             
       <!-- <script src="plugins/parcel-query.js"></script> -->
