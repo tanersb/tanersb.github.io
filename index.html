@@ -2174,7 +2174,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1-8-5-103</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.6</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -4015,12 +4015,21 @@
     
           
       
-                    
+                      
                     
       
             
       <!-- <script src="plugins/parcel-query.js"></script> -->
 
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log('[SW] Service Worker Registered!', reg))
+          .catch(err => console.error('[SW] Registration failed:', err));
+      });
+    }
+  </script>
 <script src="bundle.min.js"></script>
 </body>
 
