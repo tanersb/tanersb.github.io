@@ -2174,7 +2174,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.5.106</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1-8-5-107</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -3171,6 +3171,7 @@
       let _lastNCN     = null; // Son yüklenen NCN verisi { text, filename, epsg }
       function handleFile(file) {
         if (!file) return;
+        events.emit('file:selected', file);
 
         const ext = file.name.split('.').pop().toLowerCase();
         const allowed = ['ncz', 'geojson', 'json', 'tsb', 'ncn'];
@@ -3640,6 +3641,8 @@
 
       // ── Public API (modüller buna erişir) ─────────────────────────
       const publicAPI = {
+        // Sistem
+        system: { loadFile: handleFile },
         // Harita
         map,
         // Event sistemi
@@ -4023,11 +4026,15 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(reg => console.log('[SW] Service Worker Registered!', reg))
-          .catch(err => console.error('[SW] Registration failed:', err));
-      });
+      if (window.location.protocol !== 'file:') {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('[SW] Service Worker Registered!', reg))
+            .catch(err => console.warn('[SW] Registration failed:', err.message));
+        });
+      } else {
+        console.log('[SW] Service Worker "file://" protokolünde çalışmaz (Normal durum).');
+      }
     }
   </script>
 <script src="bundle.min.js"></script>
