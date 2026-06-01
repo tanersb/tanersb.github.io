@@ -2174,7 +2174,7 @@
     </button>
     <div class="brand">
       <div class="brand-name">GIS Viewer</div>
-      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.5.95</span></div>
+      <div class="brand-sub">KML / NCZ / CSV / DXF <span class="ver-badge" id="ver-badge">v1.8.6</span></div>
     </div>
     <div class="topstats" id="topStats" style="display:none">
       <div class="tst"><span class="tst-val" id="ts-g" style="color:var(--acc)">—</span><span
@@ -2278,52 +2278,37 @@
       </div>
       <div class="expbar" id="es-d" style="display:none">
         <div class="sec-t">Dışa / İçe Aktar</div>
-        <div class="exp-group">
-          <div class="exp-group-lbl">Vektör</div>
-          <div class="expbar-grid">
-            <button class="btn sm" id="ej-d">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-              </svg>
-              GeoJSON
-            </button>
-            <button class="btn sm" id="ek-d">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-              </svg>
-              KML
-            </button>
-            <button class="btn sm" id="ec-d">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <path d="M3 9h18M3 15h18M9 3v18" />
-              </svg>
-              CSV
-            </button>
-            <button class="btn sm dxf-exp" id="edxf-d">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              DXF Dışa
-            </button>
-            <button class="btn sm" id="etsb-d" style="grid-column:1/-1;border-color:var(--warn);color:var(--warn)">🔐
-              TSB Kaydet</button>
-          </div>
-        </div>
-        <div class="exp-group">
-          <div class="exp-group-lbl">İçe Aktar</div>
-          <div class="expbar-grid">
-            <button class="btn sm dxf-imp" id="idxf-d" style="grid-column:1/-1">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              DXF İçe Aktar
-            </button>
-          </div>
+        <div class="expbar-grid" style="margin-bottom: 8px;">
+          <button class="btn sm" id="ej-d">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+            </svg>
+            GeoJSON
+          </button>
+          <button class="btn sm" id="ek-d">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+            </svg>
+            KML
+          </button>
+          <button class="btn sm" id="ec-d">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M3 9h18M3 15h18M9 3v18" />
+            </svg>
+            CSV
+          </button>
+          <button class="btn sm dxf-exp" id="edxf-d">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            DXF Dışa
+          </button>
+          <button class="btn sm" id="etsb-d" style="border-color:var(--warn);color:var(--warn)">🔐
+            TSB
+          </button>
         </div>
       </div>
     </aside>
@@ -2561,52 +2546,37 @@
 
             <div class="bs-panel" data-bs-panel="aktar">
         <div class="expbar" id="es-m">
-          <div class="exp-group">
-            <div class="exp-group-lbl">Vektör</div>
-            <div class="expbar-grid">
-              <button class="btn sm" id="ej-m">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                </svg>
-                GeoJSON
-              </button>
-              <button class="btn sm" id="ek-m">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                </svg>
-                KML
-              </button>
-              <button class="btn sm" id="ec-m">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <path d="M3 9h18M3 15h18M9 3v18" />
-                </svg>
-                CSV
-              </button>
-              <button class="btn sm dxf-exp" id="edxf-m">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                DXF Dışa
-              </button>
-              <button class="btn sm" id="etsb-m" style="grid-column:1/-1;border-color:var(--warn);color:var(--warn)">🔐
-                TSB Kaydet</button>
-            </div>
-          </div>
-          <div class="exp-group">
-            <div class="exp-group-lbl">İçe Aktar</div>
-            <div class="expbar-grid">
-              <button class="btn sm dxf-imp" id="idxf-m" style="grid-column:1/-1">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                DXF İçe Aktar
-              </button>
-            </div>
+          <div class="expbar-grid">
+            <button class="btn sm" id="ej-m">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+              </svg>
+              GeoJSON
+            </button>
+            <button class="btn sm" id="ek-m">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+              </svg>
+              KML
+            </button>
+            <button class="btn sm" id="ec-m">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <path d="M3 9h18M3 15h18M9 3v18" />
+              </svg>
+              CSV
+            </button>
+            <button class="btn sm dxf-exp" id="edxf-m">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              DXF Dışa
+            </button>
+            <button class="btn sm" id="etsb-m" style="border-color:var(--warn);color:var(--warn)">🔐
+              TSB
+            </button>
           </div>
         </div>
       </div>
