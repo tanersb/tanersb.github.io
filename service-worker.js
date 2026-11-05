@@ -1,81 +1,81 @@
 /**
- * ════════════════════════════════════════════════════════════════════
- *  GIS VIEWER — SERVICE WORKER (Offline Mod)
+ * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+ *  GIS VIEWER â€” SERVICE WORKER (Offline Mod)
  *  Versiyon : v2.0.0
- *  Dosya    : service-worker.js  (kök dizinde olmalı)
- * ════════════════════════════════════════════════════════════════════
+ *  Dosya    : service-worker.js  (kÃ¶k dizinde olmalÄ±)
+ * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
  *
- *  AMAÇ
- *  ─────
- *  Siteyi ilk ziyarette tüm JS/CSS/HTML/ikon dosyalarını tarayıcı
- *  önbelleğine (Cache API) alır. Sonraki ziyaretlerde internet
- *  olmasa bile uygulama çalışır.
+ *  AMAÃ‡
+ *  â”€â”€â”€â”€â”€
+ *  Siteyi ilk ziyarette tÃ¼m JS/CSS/HTML/ikon dosyalarÄ±nÄ± tarayÄ±cÄ±
+ *  Ã¶nbelleÄŸine (Cache API) alÄ±r. Sonraki ziyaretlerde internet
+ *  olmasa bile uygulama Ã§alÄ±ÅŸÄ±r.
  *
- *  KISITLAMA — HArita TILE'LARI OFFLİNE ÇALIŞMAZ
- *  ───────────────────────────────────────────────
- *  OSM, Google Maps, Uydu vb. harita arka planları harici
+ *  KISITLAMA â€” HArita TILE'LARI OFFLÄ°NE Ã‡ALIÅMAZ
+ *  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ *  OSM, Google Maps, Uydu vb. harita arka planlarÄ± harici
  *  sunuculardan gelir (tile.openstreetmap.org vb.). Bunlar
- *  önbelleğe alınamaz (CORS + sonsuz sayıda tile). Offline
- *  modda harita arka planı gri/boş görünür — bu normaldir.
- *  NCZ/GeoJSON dosyası yüklenince geometriler üstte görünür.
+ *  Ã¶nbelleÄŸe alÄ±namaz (CORS + sonsuz sayÄ±da tile). Offline
+ *  modda harita arka planÄ± gri/boÅŸ gÃ¶rÃ¼nÃ¼r â€” bu normaldir.
+ *  NCZ/GeoJSON dosyasÄ± yÃ¼klenince geometriler Ã¼stte gÃ¶rÃ¼nÃ¼r.
  *
- *  STRATEJİ: Cache-First + Network Fallback
- *  ─────────────────────────────────────────
- *  1. İstek cache'de var mı? → cache'den döndür (hızlı, offline çalışır)
- *  2. Cache'de yok? → ağdan çek, cache'e kaydet, döndür
- *  3. Ağ da yoksa? → offline fallback sayfası göster (sadece HTML için)
+ *  STRATEJÄ°: Cache-First + Network Fallback
+ *  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ *  1. Ä°stek cache'de var mÄ±? â†’ cache'den dÃ¶ndÃ¼r (hÄ±zlÄ±, offline Ã§alÄ±ÅŸÄ±r)
+ *  2. Cache'de yok? â†’ aÄŸdan Ã§ek, cache'e kaydet, dÃ¶ndÃ¼r
+ *  3. AÄŸ da yoksa? â†’ offline fallback sayfasÄ± gÃ¶ster (sadece HTML iÃ§in)
  *
  *  Harita tile istekleri (openstreetmap.org, googleapis.com vb.)
- *  için strateji farklı: Network-First (tile varsa ağdan al,
- *  yoksa cache'den dene, ikisi de yoksa sessizce başarısız ol).
+ *  iÃ§in strateji farklÄ±: Network-First (tile varsa aÄŸdan al,
+ *  yoksa cache'den dene, ikisi de yoksa sessizce baÅŸarÄ±sÄ±z ol).
  *
- *  CACHE GÜNCELLEME
- *  ─────────────────
- *  Siteyi güncelleyince CACHE_VERSION'ı artır (örn. v2 → v3).
- *  Service Worker yeni versiyonu algılar, eski cache'i siler,
- *  tüm dosyaları yeniden indirir.
+ *  CACHE GÃœNCELLEME
+ *  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ *  Siteyi gÃ¼ncelleyince CACHE_VERSION'Ä± artÄ±r (Ã¶rn. v2 â†’ v3).
+ *  Service Worker yeni versiyonu algÄ±lar, eski cache'i siler,
+ *  tÃ¼m dosyalarÄ± yeniden indirir.
  *
- *  CACHE_VERSION'ı ne zaman artırmalısın?
- *    - Yeni modül eklendiğinde
- *    - Mevcut JS/CSS değiştiğinde
- *    - index.html değiştiğinde
- *  Artırmazsan kullanıcılar eski kodu görmeye devam eder!
+ *  CACHE_VERSION'Ä± ne zaman artÄ±rmalÄ±sÄ±n?
+ *    - Yeni modÃ¼l eklendiÄŸinde
+ *    - Mevcut JS/CSS deÄŸiÅŸtiÄŸinde
+ *    - index.html deÄŸiÅŸtiÄŸinde
+ *  ArtÄ±rmazsan kullanÄ±cÄ±lar eski kodu gÃ¶rmeye devam eder!
  *
  *  HATA AYIKLAMA
- *  ──────────────
- *  Chrome DevTools → Application → Service Workers
- *    "Update on reload" → geliştirme sırasında her yenilemede günceller
- *    "Bypass for network" → SW'yi devre dışı bırakır (test için)
+ *  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ *  Chrome DevTools â†’ Application â†’ Service Workers
+ *    "Update on reload" â†’ geliÅŸtirme sÄ±rasÄ±nda her yenilemede gÃ¼nceller
+ *    "Bypass for network" â†’ SW'yi devre dÄ±ÅŸÄ± bÄ±rakÄ±r (test iÃ§in)
  *
- *  Cache içeriğini görmek için:
- *    DevTools → Application → Cache Storage → gisviewer-v2
+ *  Cache iÃ§eriÄŸini gÃ¶rmek iÃ§in:
+ *    DevTools â†’ Application â†’ Cache Storage â†’ gisviewer-v2
  *
- *  SW'yi sıfırlamak için:
- *    DevTools → Application → Service Workers → Unregister
+ *  SW'yi sÄ±fÄ±rlamak iÃ§in:
+ *    DevTools â†’ Application â†’ Service Workers â†’ Unregister
  *
  *  Offline testi:
- *    DevTools → Network → Offline checkbox → sayfayı yenile
+ *    DevTools â†’ Network â†’ Offline checkbox â†’ sayfayÄ± yenile
  *
- *  DOSYA YAPISI GEREKSİNİMİ
- *  ─────────────────────────
- *  Bu dosya kök dizinde olmalı (index.html ile aynı klasör).
- *  Alt klasörde olursa scope kısıtlanır ve bazı dosyalar
- *  önbelleğe alınamaz.
+ *  DOSYA YAPISI GEREKSÄ°NÄ°MÄ°
+ *  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ *  Bu dosya kÃ¶k dizinde olmalÄ± (index.html ile aynÄ± klasÃ¶r).
+ *  Alt klasÃ¶rde olursa scope kÄ±sÄ±tlanÄ±r ve bazÄ± dosyalar
+ *  Ã¶nbelleÄŸe alÄ±namaz.
  *
- * ════════════════════════════════════════════════════════════════════
+ * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
  */
 
-// ── CACHE VERSİYONU ───────────────────────────────────────────────
-// Dosyalar değiştiğinde bu numarayı artır → eski cache otomatik silinir.
-// Format: 'gisviewer-vN' — N'i her deploy'da 1 artır.
-const CACHE_VERSION = 'gisviewer-v1780345847244';
+// â”€â”€ CACHE VERSÄ°YONU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Dosyalar deÄŸiÅŸtiÄŸinde bu numarayÄ± artÄ±r â†’ eski cache otomatik silinir.
+// Format: 'gisviewer-vN' â€” N'i her deploy'da 1 artÄ±r.
+const CACHE_VERSION = 'gisviewer-v1793901180344';
 
-// ── ÖNBELLEĞe ALINACAK DOSYALAR ──────────────────────────────────
-// Tüm uygulama dosyaları burada listelenmiştir.
-// Yeni modül eklenince buraya da ekle!
+// â”€â”€ Ã–NBELLEÄe ALINACAK DOSYALAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// TÃ¼m uygulama dosyalarÄ± burada listelenmiÅŸtir.
+// Yeni modÃ¼l eklenince buraya da ekle!
 //
-// DIKKAT: Bir dosya bile 404 dönerse install başarısız olur.
-// Emin olmadığın dosyaları OPTIONAL_FILES listesine koy.
+// DIKKAT: Bir dosya bile 404 dÃ¶nerse install baÅŸarÄ±sÄ±z olur.
+// Emin olmadÄ±ÄŸÄ±n dosyalarÄ± OPTIONAL_FILES listesine koy.
 const CACHE_FILES = [
   '/',
   '/index.html',
@@ -89,14 +89,14 @@ const CACHE_FILES = [
   '/icons/favicon-16.png'
 ];
 
-// ── OPSİYONEL DOSYALAR ───────────────────────────────────────────
-// Bunlar önbelleğe alınamazsa install başarısız OLMAZ.
-// Varlığından emin olmadığın dosyaları buraya koy.
+// â”€â”€ OPSÄ°YONEL DOSYALAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Bunlar Ã¶nbelleÄŸe alÄ±namazsa install baÅŸarÄ±sÄ±z OLMAZ.
+// VarlÄ±ÄŸÄ±ndan emin olmadÄ±ÄŸÄ±n dosyalarÄ± buraya koy.
 const OPTIONAL_FILES = [];
 
-// ── TILE KAYNAKLARI (Network-First stratejisi) ────────────────────
-// Bu domain'lerden gelen istekler için önce ağ denenir.
-// Ağ yoksa cache'e bakılır. Tile cache'i ayrı tutulur (TILE_CACHE).
+// â”€â”€ TILE KAYNAKLARI (Network-First stratejisi) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Bu domain'lerden gelen istekler iÃ§in Ã¶nce aÄŸ denenir.
+// AÄŸ yoksa cache'e bakÄ±lÄ±r. Tile cache'i ayrÄ± tutulur (TILE_CACHE).
 const TILE_ORIGINS = [
   'tile.openstreetmap.org',
   'maps.googleapis.com',
@@ -109,35 +109,35 @@ const TILE_ORIGINS = [
   'tiles.wmflabs.org',
 ];
 
-// Tile önbellek adı — ayrı cache (uygulama cache'inden bağımsız)
+// Tile Ã¶nbellek adÄ± â€” ayrÄ± cache (uygulama cache'inden baÄŸÄ±msÄ±z)
 const TILE_CACHE    = 'gisviewer-tiles-v1';
-// Maksimum önbellekte tutulacak tile sayısı
+// Maksimum Ã¶nbellekte tutulacak tile sayÄ±sÄ±
 const TILE_MAX      = 500;
 
-// ════════════════════════════════════════════════════════════════════
-//  INSTALL — Uygulama dosyalarını önbelleğe al
-// ════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  INSTALL â€” Uygulama dosyalarÄ±nÄ± Ã¶nbelleÄŸe al
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 self.addEventListener('install', event => {
   console.log(`[SW] Install: ${CACHE_VERSION}`);
 
   event.waitUntil(
     caches.open(CACHE_VERSION).then(async cache => {
 
-      // Zorunlu dosyaları tek seferde önbelleğe al
-      // Bir tane bile 404 dönerse install başarısız olur
+      // Zorunlu dosyalarÄ± tek seferde Ã¶nbelleÄŸe al
+      // Bir tane bile 404 dÃ¶nerse install baÅŸarÄ±sÄ±z olur
       const required = CACHE_FILES.filter(f => !OPTIONAL_FILES.includes(f));
       await cache.addAll(required);
 
-      // Opsiyonel dosyaları teker teker dene (başarısız olsa sorun yok)
+      // Opsiyonel dosyalarÄ± teker teker dene (baÅŸarÄ±sÄ±z olsa sorun yok)
       for (const url of OPTIONAL_FILES) {
         try {
           await cache.add(url);
         } catch (e) {
-          console.warn(`[SW] Opsiyonel dosya önbelleğe alınamadı: ${url}`);
+          console.warn(`[SW] Opsiyonel dosya Ã¶nbelleÄŸe alÄ±namadÄ±: ${url}`);
         }
       }
 
-      console.log(`[SW] ${required.length} dosya önbelleğe alındı`);
+      console.log(`[SW] ${required.length} dosya Ã¶nbelleÄŸe alÄ±ndÄ±`);
     })
   );
 
@@ -145,9 +145,9 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// ════════════════════════════════════════════════════════════════════
-//  ACTIVATE — Eski cache versiyonlarını temizle
-// ════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  ACTIVATE â€” Eski cache versiyonlarÄ±nÄ± temizle
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 self.addEventListener('activate', event => {
   console.log(`[SW] Activate: ${CACHE_VERSION}`);
 
@@ -155,7 +155,7 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys => {
       return Promise.all(
         keys
-          // Geçerli versiyon ve tile cache dışındakileri sil
+          // GeÃ§erli versiyon ve tile cache dÄ±ÅŸÄ±ndakileri sil
           .filter(k => k !== CACHE_VERSION && k !== TILE_CACHE)
           .map(k => {
             console.log(`[SW] Eski cache siliniyor: ${k}`);
@@ -165,84 +165,84 @@ self.addEventListener('activate', event => {
     })
   );
 
-  // Açık sekmeleri hemen yeni SW ile kontrol et (sayfa yenilemesiz)
+  // AÃ§Ä±k sekmeleri hemen yeni SW ile kontrol et (sayfa yenilemesiz)
   self.clients.claim();
 });
 
-// ════════════════════════════════════════════════════════════════════
-//  FETCH — İstekleri yakala ve uygun stratejiye yönlendir
-// ════════════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  FETCH â€” Ä°stekleri yakala ve uygun stratejiye yÃ¶nlendir
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // ── GET dışındaki istekleri (POST, PUT vb.) geç ──────────────
+  // â”€â”€ GET dÄ±ÅŸÄ±ndaki istekleri (POST, PUT vb.) geÃ§ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (event.request.method !== 'GET') return;
 
-  // ── Harita tile isteği mi? → Network-First ───────────────────
+  // â”€â”€ Harita tile isteÄŸi mi? â†’ Network-First â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (TILE_ORIGINS.some(origin => url.hostname.includes(origin))) {
     event.respondWith(networkFirstTile(event.request));
     return;
   }
 
-  // ── CDN isteği (Leaflet, proj4, Google Fonts) → Network-First ─
-  // Bu kaynaklar lokal değil, CORS kısıtlaması olabilir
+  // â”€â”€ CDN isteÄŸi (Leaflet, proj4, Google Fonts) â†’ Network-First â”€
+  // Bu kaynaklar lokal deÄŸil, CORS kÄ±sÄ±tlamasÄ± olabilir
   if (url.origin !== self.location.origin) {
     event.respondWith(networkFirstExternal(event.request));
     return;
   }
 
-  // ── Uygulama dosyaları → Cache-First ─────────────────────────
+  // â”€â”€ Uygulama dosyalarÄ± â†’ Cache-First â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   event.respondWith(cacheFirst(event.request));
 });
 
-// ── STRATEJİ 1: Cache-First (uygulama dosyaları) ─────────────────
-// Önce cache'e bak → varsa döndür (offline çalışır, hızlı)
-// Cache'de yoksa → ağdan çek, cache'e kaydet
+// â”€â”€ STRATEJÄ° 1: Cache-First (uygulama dosyalarÄ±) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Ã–nce cache'e bak â†’ varsa dÃ¶ndÃ¼r (offline Ã§alÄ±ÅŸÄ±r, hÄ±zlÄ±)
+// Cache'de yoksa â†’ aÄŸdan Ã§ek, cache'e kaydet
 async function cacheFirst(request) {
   const cached = await caches.match(request);
   if (cached) return cached;
 
   try {
     const response = await fetch(request);
-    // Sadece başarılı yanıtları cache'e al
+    // Sadece baÅŸarÄ±lÄ± yanÄ±tlarÄ± cache'e al
     if (response.ok) {
       const cache = await caches.open(CACHE_VERSION);
       cache.put(request, response.clone());
     }
     return response;
   } catch (err) {
-    // Hem cache hem ağ yoksa → offline fallback
+    // Hem cache hem aÄŸ yoksa â†’ offline fallback
     console.warn('[SW] Offline, cache miss:', request.url);
     return offlineFallback(request);
   }
 }
 
-// ── STRATEJİ 2: Network-First Tile (harita tile'ları) ────────────
-// Önce ağdan çek → başarılıysa cache'e kaydet
-// Ağ yoksa → tile cache'den bak
-// İkisi de yoksa → boş yanıt (harita gri görünür, hata vermez)
+// â”€â”€ STRATEJÄ° 2: Network-First Tile (harita tile'larÄ±) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Ã–nce aÄŸdan Ã§ek â†’ baÅŸarÄ±lÄ±ysa cache'e kaydet
+// AÄŸ yoksa â†’ tile cache'den bak
+// Ä°kisi de yoksa â†’ boÅŸ yanÄ±t (harita gri gÃ¶rÃ¼nÃ¼r, hata vermez)
 async function networkFirstTile(request) {
   try {
     const response = await fetch(request);
     if (response.ok) {
       const cache = await caches.open(TILE_CACHE);
       cache.put(request, response.clone());
-      // Tile cache limitini aşınca eski tile'ları temizle
+      // Tile cache limitini aÅŸÄ±nca eski tile'larÄ± temizle
       trimTileCache();
     }
     return response;
   } catch (_) {
-    // Ağ yok → cache'den dene
+    // AÄŸ yok â†’ cache'den dene
     const cached = await caches.match(request, { cacheName: TILE_CACHE });
     if (cached) return cached;
-    // İkisi de yoksa → boş 200 yanıtı (hata konsola düşmez)
+    // Ä°kisi de yoksa â†’ boÅŸ 200 yanÄ±tÄ± (hata konsola dÃ¼ÅŸmez)
     return new Response('', { status: 200 });
   }
 }
 
-// ── STRATEJİ 3: Network-First External (CDN) ─────────────────────
-// Harici CDN kaynakları (Leaflet CSS/JS, proj4 vb.)
-// Ağdan gelirse güzel, yoksa cache'den dene
+// â”€â”€ STRATEJÄ° 3: Network-First External (CDN) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Harici CDN kaynaklarÄ± (Leaflet CSS/JS, proj4 vb.)
+// AÄŸdan gelirse gÃ¼zel, yoksa cache'den dene
 async function networkFirstExternal(request) {
   try {
     const response = await fetch(request);
@@ -258,10 +258,10 @@ async function networkFirstExternal(request) {
   }
 }
 
-// ── OFFLİNE FALLBACK ─────────────────────────────────────────────
-// Hem cache hem ağ yoksa:
-//   HTML isteği → index.html'den dön (uygulama çalışmaya devam eder)
-//   Diğerleri   → boş yanıt
+// â”€â”€ OFFLÄ°NE FALLBACK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Hem cache hem aÄŸ yoksa:
+//   HTML isteÄŸi â†’ index.html'den dÃ¶n (uygulama Ã§alÄ±ÅŸmaya devam eder)
+//   DiÄŸerleri   â†’ boÅŸ yanÄ±t
 async function offlineFallback(request) {
   const accept = request.headers.get('Accept') || '';
   if (accept.includes('text/html')) {
@@ -271,16 +271,16 @@ async function offlineFallback(request) {
   return new Response('', { status: 503, statusText: 'Offline' });
 }
 
-// ── TİLE CACHE LİMİTİ ────────────────────────────────────────────
-// TILE_MAX'ı aşınca en eski tile'ları sil.
-// Cache API FIFO garantisi vermez, bu nedenle tüm anahtarları
-// alıp başından TILE_MAX kadar bırakıyoruz.
+// â”€â”€ TÄ°LE CACHE LÄ°MÄ°TÄ° â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// TILE_MAX'Ä± aÅŸÄ±nca en eski tile'larÄ± sil.
+// Cache API FIFO garantisi vermez, bu nedenle tÃ¼m anahtarlarÄ±
+// alÄ±p baÅŸÄ±ndan TILE_MAX kadar bÄ±rakÄ±yoruz.
 async function trimTileCache() {
   const cache = await caches.open(TILE_CACHE);
   const keys  = await cache.keys();
   if (keys.length > TILE_MAX) {
     const toDelete = keys.slice(0, keys.length - TILE_MAX);
     await Promise.all(toDelete.map(k => cache.delete(k)));
-    console.log(`[SW] Tile cache kırpıldı: ${toDelete.length} tile silindi`);
+    console.log(`[SW] Tile cache kÄ±rpÄ±ldÄ±: ${toDelete.length} tile silindi`);
   }
 }
