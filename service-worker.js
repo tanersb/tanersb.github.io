@@ -68,7 +68,7 @@
 // â”€â”€ CACHE VERSÄ°YONU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Dosyalar deÄŸiÅŸtiÄŸinde bu numarayÄ± artÄ±r â†’ eski cache otomatik silinir.
 // Format: 'gisviewer-vN' â€” N'i her deploy'da 1 artÄ±r.
-const CACHE_VERSION = 'gisviewer-v1793901180344';
+const CACHE_VERSION = 'gisviewer-v1793910578936';
 
 // â”€â”€ Ã–NBELLEÄe ALINACAK DOSYALAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // TÃ¼m uygulama dosyalarÄ± burada listelenmiÅŸtir.
