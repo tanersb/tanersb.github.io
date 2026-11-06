@@ -65,10 +65,27 @@
  * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
  */
 
-// â”€â”€ CACHE VERSÄ°YONU â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Dosyalar deÄŸiÅŸtiÄŸinde bu numarayÄ± artÄ±r â†’ eski cache otomatik silinir.
-// Format: 'gisviewer-vN' â€” N'i her deploy'da 1 artÄ±r.
-const CACHE_VERSION = 'gisviewer-v1793910578936';
+// ── LOCALHOST VE 127.0.0.1 GÜVENLİK VE GELİŞTİRME KALKANI ───────────
+// Yerel test ortamında Service Worker tamamen devre dışı bırakılır,
+// tüm eski önbellekler anında silinir ve unregister edilir (Bayat JS engeli).
+if (typeof self !== 'undefined' && self.location && ['localhost', '127.0.0.1'].includes(self.location.hostname)) {
+  self.addEventListener('install', () => self.skipWaiting());
+  self.addEventListener('activate', event => {
+    event.waitUntil(
+      caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))))
+        .then(() => self.registration.unregister())
+        .then(() => self.clients.claim())
+    );
+  });
+  self.addEventListener('fetch', event => {
+    event.respondWith(fetch(event.request));
+  });
+}
+
+// ── CACHE VERSİYONU ──────────────────────────────────────────────────
+// Dosyalar değiştiğinde bu numarayı artır → eski cache otomatik silinir.
+// Format: 'gisviewer-vN' — N'i her deploy'da 1 artır.
+const CACHE_VERSION = 'gisviewer-v1793997137872';
 
 // â”€â”€ Ã–NBELLEÄe ALINACAK DOSYALAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // TÃ¼m uygulama dosyalarÄ± burada listelenmiÅŸtir.
